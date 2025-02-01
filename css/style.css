@@ -1,0 +1,95 @@
+html {
+    background-color: bisque;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(104, 27, 27);
+    margin: 0px auto;
+    max-width: 1200px;
+    background-color: burlywood;
+}
+
+header nav {
+    line-height: 1em;
+    padding: 5px 0px;
+    background-color: rgb(183, 132, 87);
+}
+
+header nav ul {
+    list-style: none;
+}
+
+nav ul li a, nav ul li a:visited, nav ul li a:active {
+    font-weight: bold;
+    color: rgb(104, 27, 27);
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+header div {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+
+    position: relative;
+    margin: 50px auto;
+    min-height: 400px;
+}
+
+header div img {
+    width: 100%;
+    position: absolute;
+    opacity: 0.3;
+}
+
+header div h2 {
+    text-align: center;
+    margin: 100px auto 0px auto;
+}
+
+header div p {
+    text-align: center;
+    margin: 0px auto;
+}
+
+div.menu {
+    border: 1px solid black;
+    margin: auto 10px 10px 10px;
+    overflow: auto;
+}
+
+div.menu ul li {
+    float: left;
+    margin: auto 10px;
+    width: 30%;
+    height: 125px;
+}
+
+div.menuHeader {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+
+    position: relative;
+    margin: 50px 10px auto 10px;
+    min-height: 100px;
+}
+div.menuHeader img {
+    bottom: 0px;
+    width: 100%;
+    position: absolute;
+    opacity: 0.3;
+}
+div.menuHeader h3 {
+    text-align: center;
+    margin: auto;
+}
+
+footer {
+    text-align: center;
+    background-color: rgb(183, 132, 87);
+    padding: 10px 0px;
+}
