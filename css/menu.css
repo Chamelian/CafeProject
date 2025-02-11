@@ -1,0 +1,29 @@
+/* footer {
+    position: absolute;
+    max-width: 1200px;
+    width: 100%;
+    bottom: 0;
+} */
+
+div.menu  {
+    border: 1px solid black;
+    margin: auto 10px 10px 10px;
+    overflow: auto;
+}
+
+div.menu p {
+    text-align: center;
+}
+
+div.menu ul li {
+    float: left;
+    margin: auto 10px;
+    width: 29%;
+    /* height: 125px; */
+}
+
+div.menu ul li img {
+    display: block;
+    margin: 25px auto;
+    border: 1px solid black;
+}
