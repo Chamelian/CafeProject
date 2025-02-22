@@ -15,6 +15,26 @@
           <li><a href="./breakfast.php">Breakfast</a></li>
           <li><a href="./lunch.php">Lunch</a></li>
           <li><a href="./dinner.php">Dinner</a></li>
+          <?php
+            require_once "./utils/dbConnect.php";
+
+            if (count($_COOKIE) > 0) {
+              $connection = dbConnect();
+              $sessionID = array_keys($_COOKIE)[0];
+              $result = $connection->query("SELECT `account_fname` FROM `accounts` WHERE `account_id` = (
+                SELECT `account_id` FROM `sessions` WHERE `session_id` = '$sessionID'
+              )");
+
+              if ($result->num_rows > 0) {
+                $name = htmlspecialchars($result->fetch_assoc()["account_fname"]);
+                echo "<li id=\"loginNav\"><a href=\"./login.php\">Hello, $name</a></li>";
+              } else {
+                echo '<li id="loginNav"><a href="./login.php">Login</a></li>';
+              }
+            } else {
+              echo '<li id="loginNav"><a href="./login.php">Login</a></li>';
+            }
+          ?>
         </ul>
       </nav>
     </header>

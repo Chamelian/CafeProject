@@ -95,3 +95,8 @@ footer {
     background-color: rgb(183, 132, 87);
     padding: 10px 0px;
 }
+
+li#loginNav {
+    display: block;
+    float: right;
+}

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lizard Cafe</title>
     <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="../css/accounts.css">
   </head>
   <body>
     <header>
@@ -38,33 +38,34 @@
         </ul>
       </nav>
     </header>
-    <section id="mainBody">
-      <div id="lunch-div">
-        <div class="menuHeader">
-          <img src="../img/lunch.png" alt="Image of lunch foods">
-          <h3>Lunch Menu</h3>
-        </div>
-        <div class="menu">
-          <ul>
-            <?php
-              $dataFile = fopen("../data/datafile.txt", "r");
+    <section>
+      <h3>Log In</h3>
+      <?php
+        require_once "./utils/writeCookie.php";
 
-              while (($buffer = fgetcsv($dataFile)) != false) {
-                if ($buffer[1] == "lunch") {
-                  $name = $buffer[0];
-                  $price = $buffer[2];
-                  $imgFile = $buffer[3];
-                  $desc = $buffer[4];
-
-                  echo "<li><h4>$name - $$price</h4><p>$desc</p><img src=\"../img/menu/$imgFile\" alt=\"image of $name\"></li>";
-                }
-              }
-
-              fclose($dataFile);
-            ?>
-          </ul>
-        </div>
-      </div>
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+          $connection = dbConnect();
+          $sanitizedUsername = htmlspecialchars($_POST["username"]);
+          $result = $connection->query("SELECT * FROM `accounts` WHERE `account_username` = '$sanitizedUsername'");
+          if ($result->num_rows > 0) {
+            $account = $result->fetch_assoc();
+            if (password_verify(htmlspecialchars($_POST["password"]), $account["account_password"])) {
+              (writeCookie($connection, $account["account_id"]));
+              echo "<p>You are now logged in!</p>";
+            } else {
+              echo "<p>Unkown username or password. Try again.</p>";
+            }
+          } else {
+            echo "<p>Unkown username or password. Try again.</p>";
+          }
+        }
+      ?>
+      <form id='registration' method='post' action='<?php $_SERVER["PHP_SELF"] ?>'>
+        <p>Username: <input type='text' name='username' value='' maxlength='30' required></p>
+        <p>Password: <input type='password' name='password' value='' required></p>
+        <input type='submit' value='Login'>
+      </form>
+      <p><a href="./registration.php">Register for an account</a></p>
     </section>
     <footer>
       Lizard Cafe &#8226; 1234 Example Drive, San Jose, CA &#8226; 123-456-7890
