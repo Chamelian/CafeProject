@@ -1,12 +1,11 @@
 <?php
   function writeAccount($connection, $username, $password, $fname, $lname) {
-    $hashedPassword = htmlspecialchars(password_hash($password, PASSWORD_BCRYPT));
+    $sqlStatement = $connection->prepare("INSERT INTO `accounts` (`account_fname`, `account_lname`, `account_password`, `account_username`) VALUES (?, ?, ?, ?)");
+    $sqlStatement->bind_param("ssss", $fname, $lname, $hashedPassword, $username);
 
-    $username = htmlspecialchars($username);
-    $fname = htmlspecialchars($fname);
-    $lname = htmlspecialchars($lname);
+    $hashedPassword = password_hash(htmlspecialchars($password), PASSWORD_BCRYPT);
 
-    $sqlQuery = "INSERT INTO `accounts` (`account_fname`, `account_lname`, `account_password`, `account_username`) VALUES ('$fname', '$lname', '$hashedPassword', '$username')";
-    $connection->query($sqlQuery);
+    $sqlStatement->execute();
+    $sqlStatement->close();
   }
 ?>

@@ -7,8 +7,17 @@ body {
     color: rgb(104, 27, 27);
     margin: 0px auto;
     max-width: 1200px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    min-height: 100vh;
     background-color: burlywood;
 }
+
+section {
+    flex: 1 1 100px;
+}
+
 
 header nav {
     line-height: 1em;
@@ -92,6 +101,7 @@ div.menuHeader h3 {
 
 footer {
     text-align: center;
+    bottom: 0;
     background-color: rgb(183, 132, 87);
     padding: 10px 0px;
 }

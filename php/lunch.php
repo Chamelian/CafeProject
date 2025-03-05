@@ -18,19 +18,10 @@
           <?php
             require_once "./utils/dbConnect.php";
 
-            if (count($_COOKIE) > 0) {
-              $connection = dbConnect();
-              $sessionID = array_keys($_COOKIE)[0];
-              $result = $connection->query("SELECT `account_fname` FROM `accounts` WHERE `account_id` = (
-                SELECT `account_id` FROM `sessions` WHERE `session_id` = '$sessionID'
-              )");
-
-              if ($result->num_rows > 0) {
-                $name = htmlspecialchars($result->fetch_assoc()["account_fname"]);
-                echo "<li id=\"loginNav\"><a href=\"./login.php\">Hello, $name</a></li>";
-              } else {
-                echo '<li id="loginNav"><a href="./login.php">Login</a></li>';
-              }
+            session_start();
+            if (isset($_SESSION["username"])) {
+              $name = $_SESSION["fname"];
+              echo "<li id=\"loginNav\"><a href=\"./login.php\">Hello, $name</a></li>";
             } else {
               echo '<li id="loginNav"><a href="./login.php">Login</a></li>';
             }
@@ -47,20 +38,25 @@
         <div class="menu">
           <ul>
             <?php
-              $dataFile = fopen("../data/datafile.txt", "r");
-
-              while (($buffer = fgetcsv($dataFile)) != false) {
-                if ($buffer[1] == "lunch") {
-                  $name = $buffer[0];
-                  $price = $buffer[2];
-                  $imgFile = $buffer[3];
-                  $desc = $buffer[4];
+              $connection = dbConnect();
+              $menuData = $connection->prepare("SELECT * FROM `menu`");
+              $menuData->execute();
+              $menuDataResults = $menuData->get_result();
+              $menuItem = $menuDataResults->fetch_assoc();
+              while ($menuItem != false) {
+                if ($menuItem["item_meal"] == "lunch") {
+                  $name = $menuItem["item_name"];
+                  $price = $menuItem["item_price"];
+                  $imgFile = $menuItem["item_imagefile"];
+                  $desc = $menuItem["item_desc"];
 
                   echo "<li><h4>$name - $$price</h4><p>$desc</p><img src=\"../img/menu/$imgFile\" alt=\"image of $name\"></li>";
                 }
+                $menuItem = $menuDataResults->fetch_assoc();
               }
 
-              fclose($dataFile);
+              $menuData->close();
+              $connection->close();
             ?>
           </ul>
         </div>

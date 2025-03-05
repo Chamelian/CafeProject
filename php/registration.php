@@ -19,19 +19,10 @@
           <?php
             require_once "./utils/dbConnect.php";
 
-            if (count($_COOKIE) > 0) {
-              $connection = dbConnect();
-              $sessionID = array_keys($_COOKIE)[0];
-              $result = $connection->query("SELECT `account_fname` FROM `accounts` WHERE `account_id` = (
-                SELECT `account_id` FROM `sessions` WHERE `session_id` = '$sessionID'
-              )");
-
-              if ($result->num_rows > 0) {
-                $name = htmlspecialchars($result->fetch_assoc()["account_fname"]);
-                echo "<li id=\"loginNav\"><a href=\"./login.php\">Hello, $name</a></li>";
-              } else {
-                echo '<li id="loginNav"><a href="./login.php">Login</a></li>';
-              }
+            session_start();
+            if (isset($_SESSION["username"])) {
+              $name = $_SESSION["fname"];
+              echo "<li id=\"loginNav\"><a href=\"./login.php\">Hello, $name</a></li>";
             } else {
               echo '<li id="loginNav"><a href="./login.php">Login</a></li>';
             }
@@ -55,12 +46,13 @@
               echo "<p>This username is already taken</p>";
             } else {
               echo "<p>Your account has been created. You may now log in!</p>";
-              writeAccount($connection, $_POST["username"], $_POST["password"], $_POST["firstName"], $_POST["lastName"]);
+              writeAccount($connection, htmlspecialchars($_POST["username"]), htmlspecialchars($_POST["password"]), htmlspecialchars($_POST["firstName"]), htmlspecialchars($_POST["lastName"]));
             }
           } else {
             echo "<p>Your account has been created. You may now log in!</p>";
-            writeAccount($connection, $_POST["username"], $_POST["password"], $_POST["firstName"], $_POST["lastName"]);
+            writeAccount($connection, htmlspecialchars($_POST["username"]), htmlspecialchars($_POST["password"]), htmlspecialchars($_POST["firstName"]), htmlspecialchars($_POST["lastName"]));
           }
+          $connection->close();
         } else {
           $phpInsert = $_SERVER["PHP_SELF"];
           echo "
