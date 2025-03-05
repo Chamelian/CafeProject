@@ -39,7 +39,7 @@
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
           $connection = dbConnect();
-          $result = $connection->query("SELECT account_username FROM accounts");
+          $result = $connection->query("SELECT `account_username` FROM accounts");
 
           $accountClass = new Account();
           $accountClass->setAccountUsername($_POST["username"]);
@@ -48,12 +48,19 @@
           $accountClass->setAccountPassword($_POST["password"]);
 
           if ($result->num_rows > 0) {
-            $usernames = $result->fetch_assoc();
-            if (in_array($_POST["username"], $usernames)) {
+            $usernames = $result->fetch_all();
+            $invalid = false;
+            foreach ($usernames as $username) {
+              if (in_array($_POST["username"], $username)) {
+                $invalid = true;
+                break;
+              }
+            }
+            if ($invalid) {
               echo "<p>This username is already taken</p>";
             } else {
               echo "<p>Your account has been created. You may now log in!</p>";
-              writeAccount($connection, htmlspecialchars($_POST["username"]), htmlspecialchars($_POST["password"]), htmlspecialchars($_POST["firstName"]), htmlspecialchars($_POST["lastName"]));
+              writeAccount($connection, $accountClass);
             }
           } else {
             echo "<p>Your account has been created. You may now log in!</p>";
