@@ -38,17 +38,26 @@
         <div class="menu">
           <ul>
             <?php
+              require_once "./utils/meal.php";
+
               $connection = dbConnect();
               $menuData = $connection->prepare("SELECT * FROM `menu`");
               $menuData->execute();
               $menuDataResults = $menuData->get_result();
               $menuItem = $menuDataResults->fetch_assoc();
               while ($menuItem != null) {
-                if ($menuItem["item_meal"] == "breakfast") {
-                  $name = $menuItem["item_name"];
-                  $price = $menuItem["item_price"];
-                  $imgFile = $menuItem["item_imagefile"];
-                  $desc = $menuItem["item_desc"];
+                $menuItemClass = new MenuItem();
+                $menuItemClass->setItemName($menuItem["item_name"]);
+                $menuItemClass->setItemPrice($menuItem["item_price"]);
+                $menuItemClass->setItemImageFile($menuItem["item_imagefile"]);
+                $menuItemClass->setItemDesc($menuItem["item_desc"]);
+                $menuItemClass->setItemMeal($menuItem["item_meal"]);
+
+                if ($menuItemClass->getItemMeal() == "breakfast") {
+                  $name = $menuItemClass->getItemName();
+                  $price = $menuItemClass->getItemPrice();
+                  $imgFile = $menuItemClass->getItemImageFile();
+                  $desc = $menuItemClass->getItemDesc();
 
                   echo "<li><h4>$name - $$price</h4><p>$desc</p><img src=\"../img/menu/$imgFile\" alt=\"image of $name\"></li>";
                 }

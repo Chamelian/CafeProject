@@ -35,10 +35,17 @@
       <?php
         require_once "./utils/dbConnect.php";
         require_once "./utils/writeAccount.php";
+        require_once "./utils/account.php";
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
           $connection = dbConnect();
           $result = $connection->query("SELECT account_username FROM accounts");
+
+          $accountClass = new Account();
+          $accountClass->setAccountUsername($_POST["username"]);
+          $accountClass->setAccountFname($_POST["firstName"]);
+          $accountClass->setAccountLname($_POST["lastName"]);
+          $accountClass->setAccountPassword($_POST["password"]);
 
           if ($result->num_rows > 0) {
             $usernames = $result->fetch_assoc();
@@ -50,7 +57,7 @@
             }
           } else {
             echo "<p>Your account has been created. You may now log in!</p>";
-            writeAccount($connection, htmlspecialchars($_POST["username"]), htmlspecialchars($_POST["password"]), htmlspecialchars($_POST["firstName"]), htmlspecialchars($_POST["lastName"]));
+            writeAccount($connection, $accountClass);
           }
           $connection->close();
         } else {

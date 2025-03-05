@@ -1,9 +1,10 @@
 <?php
-  function writeAccount($connection, $username, $password, $fname, $lname) {
+  require_once "./account.php";
+  function writeAccount($connection, $account) {
     $sqlStatement = $connection->prepare("INSERT INTO `accounts` (`account_fname`, `account_lname`, `account_password`, `account_username`) VALUES (?, ?, ?, ?)");
-    $sqlStatement->bind_param("ssss", $fname, $lname, $hashedPassword, $username);
+    $sqlStatement->bind_param("ssss", $account->getAccountFname(), $account->getAccountLname(), $hashedPassword, $account->getAccountUsername());
 
-    $hashedPassword = password_hash(htmlspecialchars($password), PASSWORD_BCRYPT);
+    $hashedPassword = password_hash($account->getAccountPassword(), PASSWORD_BCRYPT);
 
     $sqlStatement->execute();
     $sqlStatement->close();

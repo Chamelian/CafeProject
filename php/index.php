@@ -16,8 +16,6 @@
           <li><a href="./lunch.php">Lunch</a></li>
           <li><a href="./dinner.php">Dinner</a></li>
           <?php
-            require_once "./utils/dbConnect.php";
-
             session_start();
             if (isset($_SESSION["username"])) {
               $name = $_SESSION["fname"];
